@@ -1,9 +1,11 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Phone.Reactive;
+using System.Windows.Threading;
 
 namespace ClickFast.ViewModel
 {
@@ -21,10 +23,12 @@ namespace ClickFast.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private readonly Stopwatch clickedWatch;
+        private Stopwatch clickedWatch;
         private SolidColorBrush _buttonColor;
         private bool m_buttonPressable;
         private string m_buttonText;
+        private int countdown;
+        private DispatcherTimer countdownTimer;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -40,10 +44,28 @@ namespace ClickFast.ViewModel
             ////    // Code runs "for real"
             ////}
             PressedCommand = new RelayCommand(OnPressedCommand, () => ButtonPressable);
-            clickedWatch = new Stopwatch();
-            ButtonText = "Wait for it...";
-            Scheduler.Dispatcher.Schedule(StartTimer, TimeSpan.FromSeconds(new Random().Next(3, 10)));
-            ButtonPressable = true;
+
+            countdown = 3;
+            countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.7) };
+            countdownTimer.Tick += (sender, args) => CountDown_Tick();
+            countdownTimer.Start();
+        }
+
+        private void CountDown_Tick()
+        {
+            if(countdown==0)
+            {
+                countdownTimer.Stop();
+                clickedWatch = new Stopwatch();
+                ButtonText = "Wait for it...";
+                ButtonPressable = true;
+                Scheduler.Dispatcher.Schedule(StartTimer, TimeSpan.FromSeconds(new Random().Next(3, 10)));    
+            }
+            else
+            {
+                ButtonText = countdown.ToString();
+                countdown--;
+            }
         }
 
         public string ButtonText
