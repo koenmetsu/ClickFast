@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Windows.Media;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Phone.Reactive;
@@ -21,6 +22,7 @@ namespace ClickFast.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private readonly Stopwatch clickedWatch;
+        private SolidColorBrush _buttonColor;
         private bool m_buttonPressable;
         private string m_buttonText;
 
@@ -54,6 +56,16 @@ namespace ClickFast.ViewModel
             }
         }
 
+        public SolidColorBrush ButtonColor
+        {
+            get { return _buttonColor; }
+            set
+            {
+                _buttonColor = value;
+                RaisePropertyChanged(() => ButtonColor);
+            }
+        }
+
         public RelayCommand PressedCommand { get; private set; }
 
         private bool ButtonPressable
@@ -72,15 +84,28 @@ namespace ClickFast.ViewModel
 
         private void StartTimer()
         {
-            clickedWatch.Start();
-            ButtonText = "Click fast!";
+            if (m_buttonPressable)
+            {
+                clickedWatch.Start();
+                ButtonText = "Click fast!";
+            }
         }
 
         private void OnPressedCommand()
         {
-            clickedWatch.Stop();
-            ButtonPressable = false;
-            ButtonText = string.Format("You clicked in at {0:0.000} seconds", clickedWatch.Elapsed.TotalSeconds);
+            if (clickedWatch.IsRunning)
+            {
+                clickedWatch.Stop();
+                ButtonColor = new SolidColorBrush(Colors.Blue);
+                ButtonText = string.Format("You clicked in at {0:0.000} seconds", clickedWatch.Elapsed.TotalSeconds);
+                m_buttonPressable = false;
+            }
+            else
+            {
+                ButtonColor = new SolidColorBrush(Colors.Red);
+                ButtonText = "Aaaaah, you were too fast!";
+                m_buttonPressable = false;
+            }
         }
     }
 }

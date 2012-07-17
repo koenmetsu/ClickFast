@@ -29,7 +29,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button Content="{Binding ButtonText}" Name="button1" Command="{Binding PressedCommand}" />
+            <Button Content="{Binding ButtonText}" Name="button1" Command="{Binding PressedCommand}" Background="{Binding ButtonColor}"/>
         </Grid>
     </Grid>
  
