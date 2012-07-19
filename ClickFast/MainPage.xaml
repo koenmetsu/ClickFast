@@ -29,7 +29,17 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Button Content="{Binding ButtonText}" Name="button1" Command="{Binding PressedCommand}" Background="{Binding ButtonColor}"/>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80*"/>
+                <RowDefinition Height="20*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.ColumnSpan="2" Grid.Row="0" Content="{Binding ClickFastButtonText}" Command="{Binding ClickFastCommand}" Background="{Binding ClickFastButtonColor}"/>
+            <Button Grid.Column="0" Grid.Row="1" Content="Retry" Command="{Binding RetryCommand}"/>
+            <Button Grid.Column="1" Grid.Row="1" Content="HighScores" Command="{Binding ShowHighScoresCommand}"/>
         </Grid>
     </Grid>
  

@@ -1,11 +1,10 @@
 using System;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows.Media;
+using System.Windows.Threading;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Phone.Reactive;
-using System.Windows.Threading;
 
 namespace ClickFast.ViewModel
 {
@@ -23,12 +22,12 @@ namespace ClickFast.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private Stopwatch clickedWatch;
+        private DispatcherTimer countdownTimer;
         private SolidColorBrush _buttonColor;
+        private Stopwatch clickedWatch;
+        private int countdown;
         private bool m_buttonPressable;
         private string m_buttonText;
-        private int countdown;
-        private DispatcherTimer countdownTimer;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -43,54 +42,78 @@ namespace ClickFast.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
-            PressedCommand = new RelayCommand(OnPressedCommand, () => ButtonPressable);
+            ClickFastCommand = new RelayCommand(OnClickFastCommand, () => ClickFastButtonPressable);
+            RetryCommand = new RelayCommand(OnRetryCommand, () => true);
 
-            countdown = 3;
+            clickedWatch = new Stopwatch();
             countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.7) };
-            countdownTimer.Tick += (sender, args) => CountDown_Tick();
+            StartCountdown();
+        }
+
+        private void StartCountdown()
+        {
+            if (countdownTimer.IsEnabled)
+            {
+                countdownTimer.Stop();
+            }
+            if(clickedWatch.IsRunning)
+            {
+                clickedWatch.Stop();
+            }
+            countdownTimer.Tick -= OnCountdownTimerTick;
+            countdown = 3;
+            countdownTimer.Tick += OnCountdownTimerTick;
             countdownTimer.Start();
         }
 
-        private void CountDown_Tick()
+
+        public RelayCommand ClickFastCommand { get; private set; }
+        public RelayCommand RetryCommand { get; private set; }
+        public RelayCommand ShowHighScoresCommand { get; private set; }
+
+        private void OnClickFastCommand()
         {
-            if(countdown==0)
+            if (clickedWatch.IsRunning)
             {
-                countdownTimer.Stop();
-                clickedWatch = new Stopwatch();
-                ButtonText = "Wait for it...";
-                ButtonPressable = true;
-                Scheduler.Dispatcher.Schedule(StartTimer, TimeSpan.FromSeconds(new Random().Next(3, 10)));    
+                clickedWatch.Stop();
+                ClickFastButtonColor = new SolidColorBrush(Colors.Blue);
+                ClickFastButtonText = string.Format("You clicked in at {0:0.000} seconds", clickedWatch.Elapsed.TotalSeconds);
+                m_buttonPressable = false;
             }
             else
             {
-                ButtonText = countdown.ToString();
-                countdown--;
+                ClickFastButtonColor = new SolidColorBrush(Colors.Red);
+                ClickFastButtonText = "Aaaaah, you were too fast!";
+                m_buttonPressable = false;
             }
         }
 
-        public string ButtonText
+        private void OnRetryCommand()
+        {
+            StartCountdown();
+        }
+
+        public string ClickFastButtonText
         {
             get { return m_buttonText; }
             set
             {
                 m_buttonText = value;
-                RaisePropertyChanged(() => ButtonText);
+                RaisePropertyChanged(() => ClickFastButtonText);
             }
         }
 
-        public SolidColorBrush ButtonColor
+        public SolidColorBrush ClickFastButtonColor
         {
             get { return _buttonColor; }
             set
             {
                 _buttonColor = value;
-                RaisePropertyChanged(() => ButtonColor);
+                RaisePropertyChanged(() => ClickFastButtonColor);
             }
         }
 
-        public RelayCommand PressedCommand { get; private set; }
-
-        private bool ButtonPressable
+        private bool ClickFastButtonPressable
         {
             get { return m_buttonPressable; }
             set
@@ -98,36 +121,37 @@ namespace ClickFast.ViewModel
                 if (value != m_buttonPressable)
                 {
                     m_buttonPressable = value;
-                    RaisePropertyChanged(() => ButtonPressable);
-                    PressedCommand.RaiseCanExecuteChanged();
+                    RaisePropertyChanged(() => ClickFastButtonPressable);
+                    ClickFastCommand.RaiseCanExecuteChanged();
                 }
+            }
+        }
+
+        private void OnCountdownTimerTick(object sender, EventArgs args)
+        {
+            if (countdown == 0)
+            {
+                countdownTimer.Stop();
+                ClickFastButtonText = "Wait for it...";
+                ClickFastButtonPressable = true;
+                Scheduler.Dispatcher.Schedule(StartTimer, TimeSpan.FromSeconds(new Random().Next(3, 10)));
+            }
+            else
+            {
+                ClickFastButtonText = countdown.ToString();
+                countdown--;
             }
         }
 
         private void StartTimer()
         {
-            if (m_buttonPressable)
+            if (m_buttonPressable && countdown == 0)
             {
                 clickedWatch.Start();
-                ButtonText = "Click fast!";
+                ClickFastButtonText = "Click fast!";
             }
         }
 
-        private void OnPressedCommand()
-        {
-            if (clickedWatch.IsRunning)
-            {
-                clickedWatch.Stop();
-                ButtonColor = new SolidColorBrush(Colors.Blue);
-                ButtonText = string.Format("You clicked in at {0:0.000} seconds", clickedWatch.Elapsed.TotalSeconds);
-                m_buttonPressable = false;
-            }
-            else
-            {
-                ButtonColor = new SolidColorBrush(Colors.Red);
-                ButtonText = "Aaaaah, you were too fast!";
-                m_buttonPressable = false;
-            }
-        }
+        
     }
 }
