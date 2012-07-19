@@ -22,10 +22,11 @@ namespace ClickFast.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private DispatcherTimer countdownTimer;
+        private readonly Stopwatch clickedWatch;
+        private readonly DispatcherTimer countdownTimer;
         private SolidColorBrush _buttonColor;
-        private Stopwatch clickedWatch;
         private int countdown;
+        private bool gameIsActive;
         private bool m_buttonPressable;
         private string m_buttonText;
 
@@ -46,33 +47,13 @@ namespace ClickFast.ViewModel
             RetryCommand = new RelayCommand(OnRetryCommand, () => true);
 
             clickedWatch = new Stopwatch();
-            countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.7) };
+            countdownTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(0.7)};
             StartCountdown();
         }
 
         public RelayCommand ClickFastCommand { get; private set; }
         public RelayCommand RetryCommand { get; private set; }
         public RelayCommand ShowHighScoresCommand { get; private set; }
-
-        private void OnClickFastCommand()
-        {
-            if (clickedWatch.IsRunning)
-            {
-                clickedWatch.Stop();
-                ClickFastButtonColor = new SolidColorBrush(Colors.Blue);
-                ClickFastButtonText = string.Format("You clicked in at {0:0.000} seconds", clickedWatch.Elapsed.TotalSeconds);
-            }
-            else
-            {
-                ClickFastButtonColor = new SolidColorBrush(Colors.Red);
-                ClickFastButtonText = "Aaaaah, you were too fast!";
-            }
-        }
-
-        private void OnRetryCommand()
-        {
-            StartCountdown();
-        }
 
         public string ClickFastButtonText
         {
@@ -108,6 +89,31 @@ namespace ClickFast.ViewModel
             }
         }
 
+        private void OnClickFastCommand()
+        {
+            if (gameIsActive)
+            {
+                if (clickedWatch.IsRunning)
+                {
+                    clickedWatch.Stop();
+                    ClickFastButtonColor = new SolidColorBrush(Colors.Blue);
+                    ClickFastButtonText = string.Format("You clicked in at {0:0.000} seconds",
+                                                        clickedWatch.Elapsed.TotalSeconds);
+                }
+                else
+                {
+                    ClickFastButtonColor = new SolidColorBrush(Colors.Red);
+                    ClickFastButtonText = "Aaaaah, you were too fast!";
+                }
+                gameIsActive = false;
+            }
+        }
+
+        private void OnRetryCommand()
+        {
+            StartCountdown();
+        }
+
         private void ClearClickFastButton()
         {
             ClickFastButtonColor = new SolidColorBrush(Colors.Black);
@@ -126,8 +132,8 @@ namespace ClickFast.ViewModel
             {
                 clickedWatch.Stop();
             }
-            countdownTimer.Tick -= OnCountdownTimerTick;
             countdown = 3;
+            countdownTimer.Tick -= OnCountdownTimerTick;
             countdownTimer.Tick += OnCountdownTimerTick;
             countdownTimer.Start();
         }
@@ -140,6 +146,7 @@ namespace ClickFast.ViewModel
                 ClickFastButtonText = "Wait for it...";
                 ClickFastButtonPressable = true;
                 Scheduler.Dispatcher.Schedule(StartTimer, TimeSpan.FromSeconds(new Random().Next(3, 10)));
+                gameIsActive = true;
             }
             else
             {
@@ -157,7 +164,5 @@ namespace ClickFast.ViewModel
                 ClickFastButtonText = "Click fast!";
             }
         }
-
-        
     }
 }
