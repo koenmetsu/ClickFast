@@ -50,23 +50,6 @@ namespace ClickFast.ViewModel
             StartCountdown();
         }
 
-        private void StartCountdown()
-        {
-            if (countdownTimer.IsEnabled)
-            {
-                countdownTimer.Stop();
-            }
-            if(clickedWatch.IsRunning)
-            {
-                clickedWatch.Stop();
-            }
-            countdownTimer.Tick -= OnCountdownTimerTick;
-            countdown = 3;
-            countdownTimer.Tick += OnCountdownTimerTick;
-            countdownTimer.Start();
-        }
-
-
         public RelayCommand ClickFastCommand { get; private set; }
         public RelayCommand RetryCommand { get; private set; }
         public RelayCommand ShowHighScoresCommand { get; private set; }
@@ -78,13 +61,11 @@ namespace ClickFast.ViewModel
                 clickedWatch.Stop();
                 ClickFastButtonColor = new SolidColorBrush(Colors.Blue);
                 ClickFastButtonText = string.Format("You clicked in at {0:0.000} seconds", clickedWatch.Elapsed.TotalSeconds);
-                m_buttonPressable = false;
             }
             else
             {
                 ClickFastButtonColor = new SolidColorBrush(Colors.Red);
                 ClickFastButtonText = "Aaaaah, you were too fast!";
-                m_buttonPressable = false;
             }
         }
 
@@ -118,13 +99,37 @@ namespace ClickFast.ViewModel
             get { return m_buttonPressable; }
             set
             {
-                if (value != m_buttonPressable)
+                if (m_buttonPressable != value)
                 {
                     m_buttonPressable = value;
                     RaisePropertyChanged(() => ClickFastButtonPressable);
                     ClickFastCommand.RaiseCanExecuteChanged();
                 }
             }
+        }
+
+        private void ClearClickFastButton()
+        {
+            ClickFastButtonColor = new SolidColorBrush(Colors.Black);
+            ClickFastButtonPressable = false;
+            ClickFastButtonText = string.Empty;
+        }
+
+        private void StartCountdown()
+        {
+            ClearClickFastButton();
+            if (countdownTimer.IsEnabled)
+            {
+                countdownTimer.Stop();
+            }
+            if (clickedWatch.IsRunning)
+            {
+                clickedWatch.Stop();
+            }
+            countdownTimer.Tick -= OnCountdownTimerTick;
+            countdown = 3;
+            countdownTimer.Tick += OnCountdownTimerTick;
+            countdownTimer.Start();
         }
 
         private void OnCountdownTimerTick(object sender, EventArgs args)
@@ -147,6 +152,7 @@ namespace ClickFast.ViewModel
         {
             if (m_buttonPressable && countdown == 0)
             {
+                clickedWatch.Reset();
                 clickedWatch.Start();
                 ClickFastButtonText = "Click fast!";
             }
