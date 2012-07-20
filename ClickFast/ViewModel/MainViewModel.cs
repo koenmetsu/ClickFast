@@ -2,9 +2,12 @@ using System;
 using System.Diagnostics;
 using System.Windows.Media;
 using System.Windows.Threading;
+using ClickFast.Framework;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Phone.Reactive;
+using NavigationService = System.Windows.Navigation.NavigationService;
+using ClickFast.Model;
 
 namespace ClickFast.ViewModel
 {
@@ -22,6 +25,7 @@ namespace ClickFast.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        private readonly INavigationService m_navigationService;
         private readonly Stopwatch clickedWatch;
         private readonly DispatcherTimer countdownTimer;
         private SolidColorBrush _buttonColor;
@@ -30,11 +34,16 @@ namespace ClickFast.ViewModel
         private bool m_buttonPressable;
         private string m_buttonText;
 
+        private readonly INavigationService navigationService;
+        private readonly ScoreStorage scoreStorage;
+
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel()
+        public MainViewModel(INavigationService navigationService)
         {
+            this.navigationService = navigationService;
+            this.scoreStorage = new ScoreStorage();
             ////if (IsInDesignMode)
             ////{
             ////    // Code runs in Blend --> create design time data.
@@ -43,11 +52,13 @@ namespace ClickFast.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+
             ClickFastCommand = new RelayCommand(OnClickFastCommand, () => ClickFastButtonPressable);
             RetryCommand = new RelayCommand(OnRetryCommand, () => true);
+            ShowHighScoresCommand = new RelayCommand(() => this.navigationService.NavigateTo(ViewModelLocator.SettingsPageUri), () => true);
 
             clickedWatch = new Stopwatch();
-            countdownTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(0.7)};
+            countdownTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(0.7) };
             StartCountdown();
         }
 
@@ -96,9 +107,11 @@ namespace ClickFast.ViewModel
                 if (clickedWatch.IsRunning)
                 {
                     clickedWatch.Stop();
+                    double secondsPassed = clickedWatch.Elapsed.TotalSeconds;
                     ClickFastButtonColor = new SolidColorBrush(Colors.Blue);
                     ClickFastButtonText = string.Format("You clicked in at {0:0.000} seconds",
-                                                        clickedWatch.Elapsed.TotalSeconds);
+                                                        secondsPassed);
+                    scoreStorage.AddScore(new Score(secondsPassed, DateTime.Now));
                 }
                 else
                 {

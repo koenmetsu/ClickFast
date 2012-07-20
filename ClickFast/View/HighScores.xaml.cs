@@ -11,19 +11,13 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Microsoft.Phone.Controls;
 
-namespace ClickFast
+namespace ClickFast.View
 {
-    public partial class MainPage : PhoneApplicationPage
+    public partial class HighScores : PhoneApplicationPage
     {
-        // Constructor
-        public MainPage()
+        public HighScores()
         {
             InitializeComponent();
-        }
-
-        private void button1_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

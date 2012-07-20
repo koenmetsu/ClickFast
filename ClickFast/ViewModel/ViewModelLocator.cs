@@ -12,9 +12,11 @@
   See http://www.galasoft.ch/mvvm
 */
 
+using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
+using ClickFast.Framework;
 
 namespace ClickFast.ViewModel
 {
@@ -24,6 +26,8 @@ namespace ClickFast.ViewModel
     /// </summary>
     public class ViewModelLocator
     {
+        public static readonly Uri SettingsPageUri = new Uri("/View/HighScores.xaml", UriKind.Relative);
+
         /// <summary>
         /// Initializes a new instance of the ViewModelLocator class.
         /// </summary>
@@ -41,8 +45,10 @@ namespace ClickFast.ViewModel
             ////    // Create run time view services and models
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
+            SimpleIoc.Default.Register<INavigationService, NavigationService>();
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<HighScoresViewModel>();
         }
 
         public MainViewModel Main
@@ -51,6 +57,11 @@ namespace ClickFast.ViewModel
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
+        }
+
+        public HighScoresViewModel HighScores
+        {
+            get { return ServiceLocator.Current.GetInstance<HighScoresViewModel>(); }
         }
         
         public static void Cleanup()
