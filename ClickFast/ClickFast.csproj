@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Framework\INavigationService.cs" />
     <Compile Include="Framework\NavigationService.cs" />
+    <Compile Include="Model\Game.cs" />
     <Compile Include="ViewModel\HighScoresViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
