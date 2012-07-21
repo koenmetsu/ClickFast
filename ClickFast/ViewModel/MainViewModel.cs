@@ -118,7 +118,7 @@ namespace ClickFast.ViewModel
         }
 
         private void GameOnEnded(Game sender, bool eventArgs)
-        {
+        {   
             if (eventArgs)
             {
                 ClickFastButtonColor = new SolidColorBrush(Colors.Blue);

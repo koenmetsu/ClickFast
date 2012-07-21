@@ -9,7 +9,7 @@ namespace ClickFast.Model
 
     public class Game
     {
-        private readonly Stopwatch clickedWatch;
+        private readonly Stopwatch clickFastWatch;
         private readonly DispatcherTimer countdownTimer;
         private readonly ScoreStorage scoreStorage;
         private int countdown;
@@ -19,7 +19,7 @@ namespace ClickFast.Model
         public Game()
         {
             scoreStorage = new ScoreStorage();
-            clickedWatch = new Stopwatch();
+            clickFastWatch = new Stopwatch();
             countdownTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(0.7)};
         }
 
@@ -30,7 +30,7 @@ namespace ClickFast.Model
 
         public double SecondsPassed
         {
-            get { return clickedWatch.Elapsed.TotalSeconds; }
+            get { return clickFastWatch.Elapsed.TotalSeconds; }
         }
 
         public event EventHandler CountDownStarted;
@@ -46,9 +46,9 @@ namespace ClickFast.Model
             {
                 countdownTimer.Stop();
             }
-            if (clickedWatch.IsRunning)
+            if (clickFastWatch.IsRunning)
             {
-                clickedWatch.Stop();
+                clickFastWatch.Stop();
             }
             countdown = 3;
             countdownTimer.Tick -= OnCountdownTimerTick;
@@ -70,10 +70,10 @@ namespace ClickFast.Model
         {
             if (gameIsActive)
             {
-                if (clickedWatch.IsRunning)
+                if (clickFastWatch.IsRunning)
                 {
-                    clickedWatch.Stop();
-                    double secondsPassed = clickedWatch.Elapsed.TotalSeconds;
+                    clickFastWatch.Stop();
+                    double secondsPassed = clickFastWatch.Elapsed.TotalSeconds;
                     scoreStorage.AddScore(new Score(secondsPassed, DateTime.Now));
                     Ended(this, true);
                 }
@@ -108,8 +108,8 @@ namespace ClickFast.Model
         {
             if (userCanPress && countdown == 0)
             {
-                clickedWatch.Reset();
-                clickedWatch.Start();
+                clickFastWatch.Reset();
+                clickFastWatch.Start();
                 ClickFastStarted(this, new EventArgs());
             }
         }
