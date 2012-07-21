@@ -37,7 +37,7 @@ namespace ClickFast.ViewModel
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
-        public MainViewModel(INavigationService navigationService)
+        public MainViewModel(INavigationService navigationService, IGame game)
         {
             this.navigationService = navigationService;
             ////if (IsInDesignMode)
@@ -48,8 +48,6 @@ namespace ClickFast.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
-
-            game = new Game();
             game.CountDownStarted += GameOnCountDownStarted;
             game.CountdownTick += GameOnCountdownTick;
             game.WaitForItStarted += GameOnWaitForItStarted;

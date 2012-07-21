@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Threading;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Phone.Reactive;
 
 namespace ClickFast.Model
 {
     public delegate void GenericEventHandler<T>(Game sender, T eventArgs);
 
-    public class Game
+    public class Game : IGame
     {
+        private readonly IMessenger messenger;
         private readonly Stopwatch clickFastWatch;
         private readonly DispatcherTimer countdownTimer;
         private readonly ScoreStorage scoreStorage;
@@ -16,8 +18,10 @@ namespace ClickFast.Model
         private bool gameIsActive;
         private bool userCanPress;
 
-        public Game()
+        public Game(IMessenger messenger)
         {
+            this.messenger = messenger;
+
             scoreStorage = new ScoreStorage();
             clickFastWatch = new Stopwatch();
             countdownTimer = new DispatcherTimer {Interval = TimeSpan.FromSeconds(0.7)};
@@ -76,6 +80,7 @@ namespace ClickFast.Model
                     double secondsPassed = clickFastWatch.Elapsed.TotalSeconds;
                     scoreStorage.AddScore(new Score(secondsPassed, DateTime.Now));
                     Ended(this, true);
+                    messenger.Send(new HighScoresUpdateMessage());
                 }
                 else
                 {

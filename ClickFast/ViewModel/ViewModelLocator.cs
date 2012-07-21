@@ -17,6 +17,8 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using ClickFast.Framework;
+using ClickFast.Model;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace ClickFast.ViewModel
 {
@@ -46,6 +48,8 @@ namespace ClickFast.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
             SimpleIoc.Default.Register<INavigationService, NavigationService>();
+            SimpleIoc.Default.Register<IMessenger, Messenger>();
+            SimpleIoc.Default.Register<IGame, Game>();
 
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<HighScoresViewModel>();

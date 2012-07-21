@@ -4,43 +4,34 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:controls="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="clr-namespace:ClickFast.View"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="768"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True"
-    DataContext="{Binding Main, Source={StaticResource Locator}}">
+    shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock x:Name="ApplicationTitle" Text="Click fast!" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="Click fast!" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
+        <!--Pivot Control-->
+        <controls:Pivot Title="TAPDANCE">
+            <!--Pivot item one-->
+            <controls:PivotItem Header="play">
+                <!--TitlePanel contains the name of the application and page title-->
+                <uc:MainControl></uc:MainControl>
+            </controls:PivotItem>
+            <controls:PivotItem Header="high scores">
+                <uc:HighScoresControl></uc:HighScoresControl>
+            </controls:PivotItem>
+        </controls:Pivot>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="80*"/>
-                <RowDefinition Height="20*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="1*" />
-            </Grid.ColumnDefinitions>
-            <Button Grid.ColumnSpan="2" Grid.Row="0" Content="{Binding ClickFastButtonText}" Command="{Binding ClickFastCommand}" Background="{Binding ClickFastButtonColor}"/>
-            <Button Grid.Column="0" Grid.Row="1" Content="Retry" Command="{Binding RetryCommand}"/>
-            <Button Grid.Column="1" Grid.Row="1" Content="HighScores" Command="{Binding ShowHighScoresCommand}"/>
-        </Grid>
+        
     </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->

@@ -55,6 +55,7 @@
       <HintPath>..\packages\MvvmLight.4.1.23.0\lib\sl4-windowsphone71\GalaSoft.MvvmLight.WP71.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone" />
+    <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Interop" />
     <Reference Include="Microsoft.Phone.Reactive" />
     <Reference Include="Microsoft.Practices.ServiceLocation">
@@ -75,12 +76,17 @@
     <Compile Include="Framework\INavigationService.cs" />
     <Compile Include="Framework\NavigationService.cs" />
     <Compile Include="Model\Game.cs" />
+    <Compile Include="Model\HighScoresUpdateMessage.cs" />
+    <Compile Include="Model\IGame.cs" />
     <Compile Include="ViewModel\HighScoresViewModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\HighScores.xaml.cs">
-      <DependentUpon>HighScores.xaml</DependentUpon>
+    <Compile Include="View\HighScoresControl.xaml.cs">
+      <DependentUpon>HighScoresControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\MainControl.xaml.cs">
+      <DependentUpon>MainControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -96,7 +102,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="View\HighScores.xaml">
+    <Page Include="View\HighScoresControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\MainControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
