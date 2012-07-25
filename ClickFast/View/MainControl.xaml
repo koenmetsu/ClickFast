@@ -12,16 +12,16 @@
     </Grid.RowDefinitions>
     <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
       <Grid.RowDefinitions>
-        <RowDefinition Height="80*" />
-        <RowDefinition Height="20*" />
+        <RowDefinition Height="75*" />
+        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
         <ColumnDefinition Width="1*" />
-        <ColumnDefinition Width="1*" />
+        <ColumnDefinition Width="auto" />
       </Grid.ColumnDefinitions>
-      <Button Grid.ColumnSpan="2" Grid.Row="0" Content="{Binding ClickFastButtonText}"
+      <Button x:Name="ClickFastButton" Grid.Row="0" Content="{Binding ClickFastButtonText}"
               Command="{Binding ClickFastCommand}" Background="{Binding ClickFastButtonColor}" />
-      <Button Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Content="Retry" Command="{Binding RetryCommand}" />
+      <Button x:Name="RetryButton" Grid.Column="0" Grid.Row="1" Content="Retry" Command="{Binding RetryCommand}" />
     </Grid>
   </Grid>
 </UserControl>

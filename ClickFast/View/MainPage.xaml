@@ -12,7 +12,7 @@
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
-    SupportedOrientations="Portrait" Orientation="Portrait"
+    SupportedOrientations="PortraitOrLandscape" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -23,7 +23,7 @@
             <!--Pivot item one-->
             <controls:PivotItem Header="play">
                 <!--TitlePanel contains the name of the application and page title-->
-                <uc:MainControl></uc:MainControl>
+                <uc:MainControl x:Name="MainControl"></uc:MainControl>
             </controls:PivotItem>
             <controls:PivotItem Header="high scores">
                 <uc:HighScoresControl></uc:HighScoresControl>

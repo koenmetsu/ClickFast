@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
+using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 
 namespace ClickFast.View
@@ -9,6 +11,7 @@ namespace ClickFast.View
         public MainPage()
         {
             InitializeComponent();
-        }   
+            OrientationChanged += (sender, args) => MainControl.OnChangePageOrientation(args);
+        }
     }
 }

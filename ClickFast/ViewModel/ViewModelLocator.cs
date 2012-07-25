@@ -13,12 +13,12 @@
 */
 
 using System;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
 using ClickFast.Framework;
 using ClickFast.Model;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
+using Microsoft.Practices.ServiceLocation;
 
 namespace ClickFast.ViewModel
 {
@@ -47,27 +47,28 @@ namespace ClickFast.ViewModel
             ////    // Create run time view services and models
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
-            SimpleIoc.Default.Register<INavigationService, NavigationService>();
-            SimpleIoc.Default.Register<IMessenger, Messenger>();
-            SimpleIoc.Default.Register<IGame, Game>();
 
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<HighScoresViewModel>();
+            if (!ViewModelBase.IsInDesignModeStatic)
+            {
+                SimpleIoc.Default.Register<INavigationService, NavigationService>();
+                SimpleIoc.Default.Register<IMessenger, Messenger>();
+                SimpleIoc.Default.Register<IGame, Game>();
+
+                SimpleIoc.Default.Register<MainViewModel>();
+                SimpleIoc.Default.Register<HighScoresViewModel>();
+            }
         }
 
         public MainViewModel Main
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<MainViewModel>(); }
         }
 
         public HighScoresViewModel HighScores
         {
             get { return ServiceLocator.Current.GetInstance<HighScoresViewModel>(); }
         }
-        
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
