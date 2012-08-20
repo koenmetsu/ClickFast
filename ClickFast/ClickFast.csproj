@@ -127,6 +127,9 @@
     <Content Include="Assets\Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Assets\logo-lightning.png" />
+    <Resource Include="Assets\Logo-Lightningtouch.png" />
+    <Resource Include="Assets\logo-touch.png" />
     <Content Include="MVVMLight.Nuget.Readme.txt" />
     <Content Include="Assets\SplashScreenImage.jpg" />
   </ItemGroup>
