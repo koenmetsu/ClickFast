@@ -1,13 +1,9 @@
 using System;
-using System.Diagnostics;
 using System.Windows.Media;
-using System.Windows.Threading;
 using ClickFast.Framework;
+using ClickFast.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
-using Microsoft.Phone.Reactive;
-using NavigationService = System.Windows.Navigation.NavigationService;
-using ClickFast.Model;
 
 namespace ClickFast.ViewModel
 {
@@ -25,14 +21,14 @@ namespace ClickFast.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
+        private readonly Game game;
         private readonly INavigationService m_navigationService;
+        private readonly INavigationService navigationService;
 
         private SolidColorBrush _buttonColor;
+        private string _retryText;
         private bool m_buttonPressable;
         private string m_buttonText;
-        private readonly Game game;
-
-        private readonly INavigationService navigationService;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -40,14 +36,6 @@ namespace ClickFast.ViewModel
         public MainViewModel(INavigationService navigationService, IGame game)
         {
             this.navigationService = navigationService;
-            ////if (IsInDesignMode)
-            ////{
-            ////    // Code runs in Blend --> create design time data.
-            ////}
-            ////else
-            ////{
-            ////    // Code runs "for real"
-            ////}
             game.CountDownStarted += GameOnCountDownStarted;
             game.CountdownTick += GameOnCountdownTick;
             game.WaitForItStarted += GameOnWaitForItStarted;
@@ -57,9 +45,10 @@ namespace ClickFast.ViewModel
 
             ClickFastCommand = new RelayCommand(game.UserClick, () => game.UserCanPress);
             RetryCommand = new RelayCommand(game.Retry, () => true);
-            ShowHighScoresCommand = new RelayCommand(() => this.navigationService.NavigateTo(ViewModelLocator.SettingsPageUri), () => true);
+            ShowHighScoresCommand =
+                new RelayCommand(() => this.navigationService.NavigateTo(ViewModelLocator.SettingsPageUri), () => true);
 
-            game.StartCountDown();
+            RetryText = "Start playing";
         }
 
         public RelayCommand ClickFastCommand { get; private set; }
@@ -74,6 +63,16 @@ namespace ClickFast.ViewModel
             {
                 m_buttonText = value;
                 RaisePropertyChanged(() => ClickFastButtonText);
+            }
+        }
+
+        public string RetryText
+        {
+            get { return _retryText; }
+            set
+            {
+                _retryText = value;
+                RaisePropertyChanged(() => RetryText);
             }
         }
 
@@ -107,6 +106,7 @@ namespace ClickFast.ViewModel
         {
             ClickFastButtonColor = new SolidColorBrush(Colors.Black);
             ClickFastButtonText = string.Empty;
+            RetryText = "Retry";
         }
 
 
@@ -116,7 +116,7 @@ namespace ClickFast.ViewModel
         }
 
         private void GameOnEnded(Game sender, bool eventArgs)
-        {   
+        {
             if (eventArgs)
             {
                 ClickFastButtonColor = new SolidColorBrush(Colors.Blue);

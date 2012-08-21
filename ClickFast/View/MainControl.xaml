@@ -21,7 +21,7 @@
       </Grid.ColumnDefinitions>
       <Button x:Name="ClickFastButton" Grid.Row="0" Content="{Binding ClickFastButtonText}"
               Command="{Binding ClickFastCommand}" Background="{Binding ClickFastButtonColor}" />
-      <Button x:Name="RetryButton" Grid.Column="0" Grid.Row="1" Content="Retry" Command="{Binding RetryCommand}" />
+      <Button x:Name="RetryButton" Grid.Column="0" Grid.Row="1" Content="{Binding RetryText}" Command="{Binding RetryCommand}" />
     </Grid>
   </Grid>
 </UserControl>
