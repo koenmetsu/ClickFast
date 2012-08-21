@@ -99,7 +99,7 @@ namespace ClickFast.ViewModel
 
         private void GameOnClickFastStarted(object sender, EventArgs eventArgs)
         {
-            ClickFastButtonText = "Click fast!";
+            ClickFastButtonText = "Tap fast!";
         }
 
         private void GameOnCountDownStarted(object sender, EventArgs eventArgs)

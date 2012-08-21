@@ -19,7 +19,7 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
 
         <!--Pivot Control-->
-        <controls:Pivot Title="TAPDANCE">
+        <controls:Pivot Title="BLITZTAP">
             <!--Pivot item one-->
             <controls:PivotItem Header="play">
                 <!--TitlePanel contains the name of the application and page title-->
